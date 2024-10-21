@@ -1,5 +1,5 @@
 [package]
-name = "bio1"
+name = "generic_sequence_alignment"
 version = "0.1.0"
 edition = "2021"
 
