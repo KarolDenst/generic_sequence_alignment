@@ -16,8 +16,8 @@ fn main() {
     let get_score_fn = |c1: char, c2: char| get_score(c1, c2, scores);
     let algorithm = &Algorithm::NeedlemanWunsch;
 
-    let s2 = &"A".repeat(1000);
-    let s1 = &"G".repeat(1000);
+    let s2 = &"A".repeat(9);
+    let s1 = &"G".repeat(9);
     // let s1 = "GATTACA";
     // let s2 = "GCATGCG";
 
@@ -26,6 +26,8 @@ fn main() {
     println!();
 
     let (tab, dir_tab) = get_sequence_table(s1, s2, gap_val, get_score_fn, algorithm);
+    print_tab(s1, s2, &tab);
+
     let aligned;
     let score;
     if algorithm == &Algorithm::NeedlemanWunsch {
@@ -35,7 +37,6 @@ fn main() {
         aligned = get_smith_waterman_sequence(s1, s2, &tab, &dir_tab);
         score = *tab.iter().flat_map(|row| row.iter()).max().unwrap();
     }
-    print_tab(s1, s2, &tab);
 
     println!();
     println!("Score: {}", score);
