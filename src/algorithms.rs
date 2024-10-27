@@ -1,15 +1,11 @@
+use crate::cli::Algorithm;
+
 #[derive(Clone, PartialEq, Debug)]
 pub enum Direction {
     Up,
     Left,
     Diagonal,
     Start,
-}
-
-#[derive(PartialEq)]
-pub enum Algorithm {
-    NeedlemanWunsch,
-    SmithWaterman,
 }
 
 pub fn get_sequence_table<F>(

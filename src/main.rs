@@ -1,25 +1,23 @@
 mod algorithms;
+mod cli;
 mod reconstruction;
 mod utils;
-use algorithms::{get_score, get_sequence_table, Algorithm};
+use algorithms::{get_score, get_sequence_table};
+use clap::Parser;
+use cli::{parse_2d_array, Algorithm, Cli};
 use reconstruction::{get_aligned_sequence, get_smith_waterman_sequence};
 use utils::print_tab;
 
 fn main() {
-    let gap_val = -2;
-    let scores = [
-        [5, -4, -4, -1],
-        [-4, 5, -4, -1],
-        [-4, -4, 5, -1],
-        [-1, -1, -1, 5],
-    ];
-    let get_score_fn = |c1: char, c2: char| get_score(c1, c2, scores);
-    let algorithm = &Algorithm::NeedlemanWunsch;
+    let args = Cli::parse();
+    let gap_val = args.gap;
+    let scores = parse_2d_array(&args.substitution_matrix);
+    let s1 = &args.s1;
+    let s2 = &args.s2;
+    let n = args.n;
+    let algorithm = &args.algorithm;
 
-    let s2 = &"A".repeat(9);
-    let s1 = &"G".repeat(9);
-    // let s1 = "GATTACA";
-    // let s2 = "GCATGCG";
+    let get_score_fn = |c1: char, c2: char| get_score(c1, c2, scores);
 
     println!("s1: {}", s1);
     println!("s2: {}", s2);
@@ -31,10 +29,10 @@ fn main() {
     let aligned;
     let score;
     if algorithm == &Algorithm::NeedlemanWunsch {
-        aligned = get_aligned_sequence(s1, s2, &dir_tab);
+        aligned = get_aligned_sequence(s1, s2, &dir_tab, &mut n.clone());
         score = tab[s1.len()][s2.len()];
     } else {
-        aligned = get_smith_waterman_sequence(s1, s2, &tab, &dir_tab);
+        aligned = get_smith_waterman_sequence(s1, s2, &tab, &dir_tab, n);
         score = *tab.iter().flat_map(|row| row.iter()).max().unwrap();
     }
 
